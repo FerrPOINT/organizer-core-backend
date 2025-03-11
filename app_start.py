@@ -1,5 +1,6 @@
 import logging
 import subprocess
+import sys
 import time
 
 from fastapi import FastAPI
@@ -47,9 +48,16 @@ def run_migrations():
 
 
 def start_server():
-    """Запускаем FastAPI."""
-    logger.info("🚀 Запуск FastAPI...")
-    subprocess.run(["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"], check=True)
+    try:
+        """Запускаем FastAPI."""
+        logger.info("🚀 Запуск FastAPI...")
+        subprocess.run(["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"], check=True)
+    except KeyboardInterrupt:
+        print("🛑 Сервер остановлен пользователем (Ctrl+C)")
+        sys.exit(0)
+    except Exception as e:
+        print(f"❌ Ошибка при запуске сервера: {e}")
+        sys.exit(1)
 
 
 # Ожидаем доступность БД и применяем миграции
