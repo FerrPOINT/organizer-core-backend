@@ -2,8 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "postgresql://user:password@localhost/organizer_db"
+from app.settings import db_settings  # Импортируем настройки
 
-engine = create_engine(DATABASE_URL)
+# Используем строку подключения из настроек
+engine = create_engine(db_settings.DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

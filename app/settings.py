@@ -1,10 +1,24 @@
-from pydantic import BaseSettings
+from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
-class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql://user:password@localhost/organizer_db"
-    SECRET_KEY: str = "super-secret-key"
+# Загружаем .env
+load_dotenv()
+
+
+class DBSettings(BaseSettings):
+    DATABASE_URL: str
 
     class Config:
-        env_file = ".env"
+        extra = "ignore"
 
-settings = Settings()
+
+class UserSettings(BaseSettings):
+    USER_NAME: str
+    USER_EMAIL: str
+
+    class Config:
+        extra = "ignore"
+
+
+db_settings = DBSettings()
+user_settings = UserSettings()
