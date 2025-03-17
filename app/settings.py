@@ -12,13 +12,24 @@ class DBSettings(BaseSettings):
         extra = "ignore"
 
 
-class UserSettings(BaseSettings):
-    USER_NAME: str
-    USER_EMAIL: str
+class AdminSettings(BaseSettings):
+    ADMIN_NAME: str
+    ADMIN_EMAIL: str
+    ADMIN_PASSWORD: str
 
     class Config:
         extra = "ignore"
 
 
-db_settings = DBSettings()
-user_settings = UserSettings()
+class OauthSettings(BaseSettings):
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_HOURS: float
+
+    class Config:
+        extra = "ignore"
+
+
+db_settings = DBSettings();
+admin_settings = AdminSettings()
+oauth_settings = OauthSettings()
