@@ -30,6 +30,6 @@ class OauthSettings(BaseSettings):
         extra = "ignore"
 
 
-db_settings = DBSettings();
+db_settings = DBSettings()
 admin_settings = AdminSettings()
 oauth_settings = OauthSettings()

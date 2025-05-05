@@ -43,7 +43,7 @@ def wait_for_db():
 def run_migrations():
     """Применяем миграции Alembic."""
     logger.info("🔄 Применяем миграции Alembic...")
-    subprocess.run(["alembic", "upgrade", "head"], check=True)  # Убираем --config
+    subprocess.run([sys.executable, "-m", "alembic", "upgrade", "head"], check=True)
     logger.info("✅ Все миграции применены!")
 
 
@@ -51,7 +51,8 @@ def start_server():
     try:
         """Запускаем FastAPI."""
         logger.info("🚀 Запуск FastAPI...")
-        subprocess.run(["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"], check=True)
+        subprocess.run([sys.executable, "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"],
+                       check=True)
     except KeyboardInterrupt:
         print("🛑 Сервер остановлен пользователем (Ctrl+C)")
         sys.exit(0)
