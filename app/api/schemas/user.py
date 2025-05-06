@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from app.dto.email_str import EmailStr
+from app.api.schemas.email_str import EmailStr
 
 
 class UserBase(BaseModel):

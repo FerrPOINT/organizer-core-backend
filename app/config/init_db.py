@@ -2,10 +2,10 @@ import sys
 
 from sqlalchemy.orm import Session
 
-from app.core.logger import logger
-from app.models.user import User
+from app.config.logger import logger
+from app.db.models.user import User
+from app.db.session_factory import SessionLocal
 from app.services.auth import get_password_hash
-from app.services.db import SessionLocal
 from app.settings import admin_settings
 
 

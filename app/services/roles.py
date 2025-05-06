@@ -1,9 +1,9 @@
 from fastapi import Depends, HTTPException, Path
 from sqlalchemy.orm import Session
 
-from app.models.user import User
+from app.db.models.user import User
+from app.db.session_factory import get_db
 from app.services.auth import get_current_user
-from app.services.db import get_db
 
 
 def is_self_or_admin(user_id: int = Path(...), db: Session = Depends(get_db),

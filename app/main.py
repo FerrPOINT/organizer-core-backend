@@ -2,11 +2,11 @@ from fastapi import FastAPI
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware import Middleware
 
-from app.core.error_handler import ErrorHandler
-from app.core.logger import LogMiddleware, logger
-from app.routes import auth, users
-from app.util.init_db import init_default_admin  #
-from app.util.openapi_saver import save_openapi_schema, save_openapi_schema_yaml
+from app.api.routes import users, auth
+from app.config.error_handler import ErrorHandler
+from app.config.init_db import init_default_admin  #
+from app.config.logger import LogMiddleware, logger
+from app.config.openapi_saver import save_openapi_schema, save_openapi_schema_yaml
 
 logger.info("🚀 Проверка базы и инициализация...")
 init_default_admin()  # ✅ Запускаем создание дефолтного админа

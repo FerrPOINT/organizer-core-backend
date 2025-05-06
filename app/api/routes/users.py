@@ -3,10 +3,10 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.dto.user import UserOut, UserCreate, UserUpdate
-from app.models.user import User
-from app.repository import user as crud
-from app.services.db import get_db
+from app.api.schemas.user import UserOut, UserCreate, UserUpdate
+from app.db.models.user import User
+from app.db.repository import user as crud
+from app.db.session_factory import get_db
 from app.services.roles import role_required, is_self_or_admin
 
 router = APIRouter(prefix="/users", tags=["Users"])

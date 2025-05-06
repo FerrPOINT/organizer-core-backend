@@ -6,7 +6,7 @@ import time
 from fastapi import FastAPI
 from sqlalchemy import text
 
-from app.services.db import engine
+from app.db.session_factory import engine
 
 app = FastAPI(title="Organizer Core API")
 
