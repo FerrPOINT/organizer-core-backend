@@ -1,20 +1,33 @@
-# app/dto/user.py
-from pydantic import BaseModel, ConfigDict, Field
+from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from app.dto.email_str import EmailStr
 
 
-class User(BaseModel):
+class UserBase(BaseModel):
+    name: str = Field(alias="name")  # 🔁 name из ORM будет попадать сюда
+    email: Optional[EmailStr] = None
+    role: str = "user"
+    is_active: bool = True
+
+
+class UserCreate(UserBase):
+    password: str = Field(min_length=8)
+
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = Field(alias="name")  # 🔁 name из ORM будет попадать сюда
+    email: Optional[EmailStr]
+    password: Optional[str]
+    is_active: Optional[bool]
+
+
+class UserOut(UserBase):
     id: int
-    username: str = Field(alias="name")  # 🔁 name из ORM будет попадать сюда
-    email: str
-    role: str
-    model_config = ConfigDict(from_attributes=True)  # ⬅️ важно для маппинга
+    created_at: datetime
+    updated_at: datetime
 
-
-class UserLoginRequest(BaseModel):
-    username: str
-    password: str
-
-
-class AuthResponse(BaseModel):
-    access_token: str
-    token_type: str
+    class Config:
+        orm_mode = True

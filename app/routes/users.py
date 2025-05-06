@@ -1,12 +1,70 @@
-from fastapi import APIRouter, Depends
+from typing import List
 
-from app.dto.user import User as UserDto
-from app.models.user import User as DBUser
-from app.services.auth import get_current_user
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
-router = APIRouter()
+from app.dto.user import UserOut, UserCreate, UserUpdate
+from app.models.user import User
+from app.repository import user as crud
+from app.services.db import get_db
+from app.services.roles import role_required, is_self_or_admin
+
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/users/me", response_model=UserDto)
-def get_me(current_user: DBUser = Depends(get_current_user)):
-    return UserDto.model_validate(current_user)
+@router.get("/", response_model=List[UserOut])
+def list_users(
+        current_user: User = Depends(is_self_or_admin),
+        db: Session = Depends(get_db),
+        skip=0,
+        limit=100
+):
+    return crud.get_users(db, skip, limit)
+
+
+@router.post("/", response_model=UserOut)
+def create_user(
+        user_in: UserCreate,
+        current_user: User = Depends(is_self_or_admin),
+        db: Session = Depends(get_db)
+):
+    if crud.get_user_by_name(db, user_in.name):
+        raise HTTPException(400, "Username already exists")
+    return crud.create_user(db, user_in)
+
+
+@router.get("/{user_id}", response_model=UserOut)
+def read_user(
+        user_id: int,
+        current_user: User = Depends(is_self_or_admin),
+        db: Session = Depends(get_db)):
+    user = crud.get_user(db, user_id)
+    if not user:
+        raise HTTPException(404, "User not found")
+    return user
+
+
+@router.put("/{user_id}", response_model=UserOut)
+def update_user(
+        user_id: int,
+        user_in: UserUpdate,
+        current_user: User = Depends(is_self_or_admin),
+        db: Session = Depends(get_db)
+):
+    user = crud.get_user(db, user_id)
+    if not user:
+        raise HTTPException(404, "User not found")
+    return crud.update_user(db, user, user_in)
+
+
+@router.delete("/{user_id}")
+def delete_user(
+        user_id: int,
+        current_user: User = Depends(role_required("admin")),
+        db: Session = Depends(get_db)
+):
+    user = crud.get_user(db, user_id)
+    if not user:
+        raise HTTPException(404, "User not found")
+    crud.delete_user(db, user)
+    return {"detail": "Deleted"}
