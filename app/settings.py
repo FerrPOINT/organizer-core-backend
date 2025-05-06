@@ -25,6 +25,7 @@ class OauthSettings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_HOURS: float
+    ORIGIN: str
 
     class Config:
         extra = "ignore"

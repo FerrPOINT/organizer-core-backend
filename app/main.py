@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware import Middleware
 
@@ -7,6 +8,7 @@ from app.config.error_handler import ErrorHandler
 from app.config.init_db import init_default_admin  #
 from app.config.logger import LogMiddleware, logger
 from app.config.openapi_saver import save_openapi_schema, save_openapi_schema_yaml
+from app.settings import oauth_settings  # Импортируем настройки
 
 logger.info("🚀 Проверка базы и инициализация...")
 init_default_admin()  # ✅ Запускаем создание дефолтного админа
@@ -15,6 +17,14 @@ logger.info("✅ Создание апи")
 app = FastAPI(
     title="Organizer Core API",
     middleware=[Middleware(LogMiddleware)]
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[oauth_settings.ORIGIN],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 logger.info("✅ Регистрируем роуты")
