@@ -26,7 +26,7 @@ def init_default_admin():
             name=admin_settings.ADMIN_NAME,
             email=admin_settings.ADMIN_EMAIL,
             hashed_password=get_password_hash(admin_settings.ADMIN_PASSWORD),
-            role="ADMIN",
+            role="admin",
         )
         db.add(admin)
         db.commit()

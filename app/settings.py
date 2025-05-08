@@ -26,6 +26,7 @@ class OauthSettings(BaseSettings):
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_HOURS: float
     ORIGIN: str
+    OPENAPI_COPY_FOLDER: str
 
     class Config:
         extra = "ignore"

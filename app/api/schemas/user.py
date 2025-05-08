@@ -7,10 +7,10 @@ from app.api.schemas.email_str import EmailStr
 
 
 class UserBase(BaseModel):
-    name: str = Field(alias="name")  # 🔁 name из ORM будет попадать сюда
-    email: Optional[EmailStr] = None
-    role: str = "user"
-    is_active: bool = True
+    name: str
+    email: EmailStr
+    role: str
+    is_active: bool
 
 
 class UserCreate(UserBase):
@@ -18,9 +18,11 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(BaseModel):
-    name: Optional[str] = Field(alias="name")  # 🔁 name из ORM будет попадать сюда
+    id: int
+    name: Optional[str]
     email: Optional[EmailStr]
-    password: Optional[str]
+    role: Optional[str]
+    password: Optional[str] = None
     is_active: Optional[bool]
 
 

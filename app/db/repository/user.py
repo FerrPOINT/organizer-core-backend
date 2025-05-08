@@ -22,7 +22,8 @@ def create_user(db: Session, user_in: UserCreate) -> User:
         name=user_in.name,
         email=user_in.email,
         hashed_password=get_password_hash(user_in.password),
-        role=user_in.role
+        role=user_in.role,
+        is_active=user_in.is_active,
     )
     db.add(user)
     db.commit()
@@ -33,7 +34,8 @@ def create_user(db: Session, user_in: UserCreate) -> User:
 def update_user(db: Session, user: User, data: UserUpdate) -> User:
     for field, value in data.model_dump(exclude_unset=True).items():
         if field == "password":
-            user.hashed_password = get_password_hash(value)
+            if value:
+                user.hashed_password = get_password_hash(value)
         else:
             setattr(user, field, value)
     db.commit()

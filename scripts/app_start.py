@@ -1,19 +1,16 @@
-import logging
+import subprocess
 import subprocess
 import sys
 import time
 
-from fastapi import FastAPI
+from loguru import logger
 from sqlalchemy import text
 
 from app.db.session_factory import engine
+from config.logger import configure_logging
 
-app = FastAPI(title="Organizer Core API")
 
 # Логирование
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 # Ожидаем доступность БД
 def wait_for_db():
@@ -47,6 +44,7 @@ def run_migrations():
     logger.info("✅ Все миграции применены!")
 
 
+# Запускаем main
 def start_server():
     try:
         """Запускаем FastAPI."""
@@ -54,19 +52,14 @@ def start_server():
         subprocess.run([sys.executable, "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"],
                        check=True)
     except KeyboardInterrupt:
-        print("🛑 Сервер остановлен пользователем (Ctrl+C)")
+        logger.info("🛑 Сервер остановлен пользователем (Ctrl+C)")
         sys.exit(0)
     except Exception as e:
-        print(f"❌ Ошибка при запуске сервера: {e}")
+        logger.info(f"❌ Ошибка при запуске сервера: {e}")
         sys.exit(1)
 
 
-# Ожидаем доступность БД и применяем миграции
+configure_logging()
 wait_for_db()
 run_migrations()
 start_server()
-
-
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to Organizer Core API"}
